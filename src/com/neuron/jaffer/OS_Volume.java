@@ -733,7 +733,7 @@ class OS_Volume extends AFP_Volume
 		public long getResourceForkLen()
 		{
 			cacheResourceInfo();
-			return rsrcLength;
+			return rsrcLength == -1 ? 0 : rsrcLength;
 		}
 
 		@Override
