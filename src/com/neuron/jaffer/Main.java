@@ -53,6 +53,7 @@ public class Main extends Utility implements AFP_Constants, DSI_Constants
 			String rname = args.length > 4 ? args[4] : null; // default hostname
 			OS_Server server = new OS_Server(rname, port);
 			server.addVolume(new OS_Volume(vname, new File(vdir), null));
+			server.setGuestUser("guest");
 			server.start();
 		}
 		else
