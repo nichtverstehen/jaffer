@@ -10,6 +10,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.Vector;
 
 public final class ByteWriter extends Utility
@@ -156,8 +157,10 @@ public final class ByteWriter extends Utility
 
 	public void writeAFPString(String s)
 	{
-		writeShort(s.length());
-		writeBytes(s.getBytes());
+		writeInt(0); // original encoding
+		byte[] bytes = s.getBytes(Charset.forName("UTF-8"));
+		writeShort(bytes.length);
+		writeBytes(bytes);
 	}
 
 	public void writeByte(int i)

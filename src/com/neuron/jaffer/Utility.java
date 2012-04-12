@@ -5,6 +5,7 @@
 
 package com.neuron.jaffer;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 
 public abstract class Utility
@@ -43,10 +44,17 @@ public abstract class Utility
 		return new String(d, off, len);
 	}
 
-	public final static String readAFPString(byte d[], int off)
+	public final static String readAFPString(byte d[], int off, int[] fieldSize)
 	{
-		int len = ((d[off] & 0xff) << 8) | (d[off+1] & 0xff);
-		return new String(d, off+2, len);
+		int encoding = readInt4(d, off);
+		int lenOff = off+4;
+		int len = ((d[lenOff] & 0xff) << 8) | (d[lenOff+1] & 0xff);
+		fieldSize[0] = 4+2+len;
+		try {
+			return new String(d, lenOff+2, len, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			return null;
+		}
 	}
 
 	public final static void writePString(byte d[], int off, String str)

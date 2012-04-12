@@ -138,15 +138,16 @@ public final class ByteReader extends Utility
 			return readPString();
 		}
 	}
-	
+
 	// unicode?
 	public String readAFPString()
 	{
-		String s = readAFPString(data,pos);
-		pos += s.length() + 2;
+		int[] fieldSize = new int[1];
+		String s = readAFPString(data,pos,fieldSize);
+		pos += fieldSize[0];
 		return s;
 	}
-	
+
 	public byte readByte()
 	{
 		return data[pos++];
