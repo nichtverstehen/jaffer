@@ -891,7 +891,7 @@ final class AFP_Session extends Utility implements AFP_Constants
 		rr.skip(1);
 		int type = rr.readUnsignedShort();
 		int dlen = rr.readInt();
-		ww.writeShort(type);
+		//ww.writeShort(type);
 		ww.writeInt(4);
 		ww.writeInt(0x77665544);
 		return ERR_NO_ERR;
