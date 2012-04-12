@@ -1329,7 +1329,7 @@ final class AFP_Session extends Utility implements AFP_Constants
 				}
 				continue;
 			}
-			ByteWriter w2 = new ByteWriter(128);
+			ByteWriter w2 = new ByteWriter(1024);
 			if (next.isDirectory())
 			{
 				sendDirectoryInfo(w2, next, dirFlags, MODE_EXT);

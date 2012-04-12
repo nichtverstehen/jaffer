@@ -151,6 +151,7 @@ class OS_Volume extends AFP_Volume
 		return 
 			(readonly              ? VOL_ATTR_READONLY : 0) |
 			(getPassword() != null ? VOL_ATTR_PASSWORD : 0) |
+			VOL_ATTR_UTF8_NAMES |
 			0;
 	}
 
@@ -505,7 +506,7 @@ class OS_Volume extends AFP_Volume
 		public boolean isDirectory() {
 			return file.isDirectory();
 		}
-		
+
 		@Override
 		public int getParentNodeID()
 		{
