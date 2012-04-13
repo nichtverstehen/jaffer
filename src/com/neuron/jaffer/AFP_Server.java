@@ -11,8 +11,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Hashtable;
 
-import com.strangeberry.rendezvous.Rendezvous;
-import com.strangeberry.rendezvous.ServiceInfo;
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceInfo;
 
 /* TODO: request/reply queues
  *   * command 0x7a - client going to sleep?
@@ -48,7 +48,7 @@ public abstract class AFP_Server implements AFP_Constants, Runnable
 	private int nextVolID = 1;
 	private Hashtable volumesByID;
 	private Hashtable volumesByName;
-	private Rendezvous rendezvous;
+	private JmDNS rendezvous;
 	private AFP_ServerInfo serverInfo;
 
 	public AFP_Server()
@@ -72,9 +72,10 @@ public abstract class AFP_Server implements AFP_Constants, Runnable
 	public AFP_Server(String rname, String bind, int port)
 		throws IOException
 	{
+		InetAddress addr = InetAddress.getLocalHost();
 		this.bind = bind;
 		this.port = port;
-		this.rendezvous = new Rendezvous();
+		this.rendezvous = JmDNS.create(addr);
 		this.volumesByID = new Hashtable();
 		this.volumesByName = new Hashtable();
 		// set debug level
@@ -84,14 +85,13 @@ public abstract class AFP_Server implements AFP_Constants, Runnable
 			setDebugLevel(Integer.parseInt(dl));
 		}
 		// register server with Rendezvous
-		InetAddress addr = InetAddress.getLocalHost();
 		serverName = rname != null ? rname : addr.getHostName();
 		if (rname == null && serverName.indexOf('.') > 0)
 		{
 			serverName = serverName.substring(0, serverName.indexOf('.'));
 		}
-		rendezvous.registerService(new ServiceInfo(
-			"_afpovertcp._tcp.local.", serverName+"._afpovertcp._tcp.local.", addr, port, 1, 1, "Java AFP Server"
+		rendezvous.registerService(ServiceInfo.create(
+			"_afpovertcp._tcp.local.", serverName, port, 1, 1, "Java AFP Server"
 		));
 	}
 
