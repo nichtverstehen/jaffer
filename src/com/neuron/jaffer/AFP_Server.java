@@ -184,10 +184,29 @@ public abstract class AFP_Server implements AFP_Constants, Runnable
 			return;
 		}
 		socket = bind != null ?
-			new ServerSocket(port, 10, InetAddress.getByName(bind)) :
+			new ServerSocket(port, 10, bind) :
 			new ServerSocket(port);
 		thread = new Thread(this, "AFP Server");
 		thread.start();
+	}
+
+	public synchronized void stop() throws IOException {
+		Thread moribund = thread;
+		ServerSocket moribundSocket = socket;
+		if (moribund == null || moribundSocket == null)
+			return;
+
+		moribund.interrupt();
+		moribundSocket.close();
+		rendezvous.close();
+
+		try {
+			// wait for closing
+			moribund.join();
+		}
+		catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void run()
@@ -197,14 +216,24 @@ public abstract class AFP_Server implements AFP_Constants, Runnable
 			System.out.println(
 				"Jaffer AFP/TCP Server v"+Main.VERSION+
 				" ready on port "+socket.getLocalPort()+" as '"+serverName+"'");
-			while (true)
+			while (!thread.isInterrupted())
 			{
 				acceptConnection();
 			}
 		}
 		catch (Exception ex)
 		{
-			ex.printStackTrace();
+			if (!thread.isInterrupted()) // not "normal" shutdown
+				ex.printStackTrace();
+		}
+		finally {
+			try {
+				socket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			socket = null;
+			thread = null;
 		}
 	}
 
