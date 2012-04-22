@@ -12,7 +12,7 @@ import java.io.RandomAccessFile;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-class OS_Volume extends AFP_Volume
+public class OS_Volume extends AFP_Volume
 {
 	private final static int LOCK_BITS = AFP_CNode.MODE_WRITE_LOCK | AFP_CNode.MODE_READ_LOCK;
 
@@ -22,7 +22,7 @@ class OS_Volume extends AFP_Volume
 	private boolean readonly;
 	private String passwd;
 
-	OS_Volume(String vname, File root, String password)
+	public OS_Volume(String vname, File root, String password)
 	{
 		this.volName = vname;
 		this.allNodes = new Hashtable();
