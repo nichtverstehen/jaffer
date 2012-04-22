@@ -6,6 +6,7 @@
 package com.neuron.jaffer;
 
 import java.io.IOException;
+import java.net.InetAddress;
 
 public class OS_Server extends AFP_Server
 {
@@ -42,7 +43,7 @@ public class OS_Server extends AFP_Server
 		super(rname, port);
 	}
 
-	public OS_Server(String rname, String bind, int port)
+	public OS_Server(String rname, InetAddress bind, int port)
 		throws IOException
 	{
 		super(rname, bind, port);

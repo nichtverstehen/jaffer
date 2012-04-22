@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Enumeration;
@@ -178,7 +179,7 @@ public class Main extends Utility implements AFP_Constants, DSI_Constants
 			Config port = ports.configValue(pkey);
 			OS_Server server = new OS_Server(
 				port.stringValue("zeroconf name"),
-				port.stringValue("interface"), pkey.intValue());
+				InetAddress.getByName(port.stringValue("interface")), pkey.intValue());
 			server.setDebugLevel(ports.intValue("debug", 1));
 			for (Enumeration v = port.keys(); v.hasMoreElements(); )
 			{

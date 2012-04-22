@@ -41,7 +41,7 @@ public abstract class AFP_Server implements AFP_Constants, Runnable
 	};
 
 	private int port;
-	private String bind;
+	private InetAddress bind;
 	private ServerSocket socket;
 	private String serverName;
 	private Thread thread;
@@ -69,13 +69,15 @@ public abstract class AFP_Server implements AFP_Constants, Runnable
 		this(rname, null, port);
 	}
 
-	public AFP_Server(String rname, String bind, int port)
+	public AFP_Server(String rname, InetAddress bind, int port)
 		throws IOException
 	{
-		InetAddress addr = InetAddress.getLocalHost();
+		if (bind == null)
+			bind = InetAddress.getLocalHost();
+
 		this.bind = bind;
 		this.port = port;
-		this.rendezvous = JmDNS.create(addr);
+		this.rendezvous = JmDNS.create(bind);
 		this.volumesByID = new Hashtable();
 		this.volumesByName = new Hashtable();
 		// set debug level
@@ -85,7 +87,7 @@ public abstract class AFP_Server implements AFP_Constants, Runnable
 			setDebugLevel(Integer.parseInt(dl));
 		}
 		// register server with Rendezvous
-		serverName = rname != null ? rname : addr.getHostName();
+		serverName = rname != null ? rname : bind.getHostName();
 		if (rname == null && serverName.indexOf('.') > 0)
 		{
 			serverName = serverName.substring(0, serverName.indexOf('.'));
