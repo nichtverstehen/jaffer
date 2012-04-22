@@ -547,6 +547,7 @@ final class AFP_Session extends Utility implements AFP_Constants
 				{
 					userName = user;
 					validated = true;
+					server.setThreadOwner(userName);
 				}
 				else
 				{
